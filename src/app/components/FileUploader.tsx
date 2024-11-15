@@ -4,6 +4,16 @@ import Image from "next/image"
 import { useState } from "react";
 import { Loading } from "./Loading";
 
+enum UploadStatus {
+    PENDING = 0,
+    SUCCESS = 1,
+    FAILED = 2
+}
+
+interface FileUploladerProps { 
+    file: File | null;
+    status: UploadStatus
+}
 let intervalId: unknown | null = null;
 
 export const FileUplolader = () => {
@@ -12,21 +22,22 @@ export const FileUplolader = () => {
     const [isUploadComplete, setIsUploadComplete] = useState(false);
     const [isUploadFailed, setIsUploadFailed] = useState(false);
     const [file, setFile] = useState<File | null>(null);
+    const [filesUploaded, setFilesUploaded] = useState<FileUploladerProps[]>([]);
 
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         setIsUploading(true)
         if (event.target.files && event.target.files.length > 0) {
-            const newFile = event.target.files[0]
-            setIsUploading(false)
-            setIsUploadComplete(true)
-            setFile(newFile);
-            console.log(newFile);
             const file = event.target.files[0];
+            const newFile = {
+                file: event.target.files[0],
+                status: UploadStatus.PENDING
+            }
             intervalId = setTimeout(() => {
                 setIsUploading(false)
                 setIsUploadComplete(true)
                 setFile(file);
+                setFilesUploaded([...filesUploaded, newFile]);
             }, 2000) as unknown;
         }
     };
