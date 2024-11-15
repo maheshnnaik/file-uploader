@@ -7,6 +7,9 @@ import { Loading } from "./Loading";
 export const FileUplolader = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [isUploadComplete, setIsUploadComplete] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         setIsUploading(true)
@@ -38,6 +41,9 @@ export const FileUplolader = () => {
         if (isUploading) {
             return <UploadInProgress />
         }
+        if (isUploadComplete) {
+            return <UploadComplete fileName={file?.name || ''} setIsUploadComplete={setIsUploadComplete} />
+        }
         return <FileUpload handleFileSelect={handleFileSelect} />
     }
 
@@ -58,6 +64,26 @@ export const FileUplolader = () => {
     )
 }
 
+const FileUpload = ({ handleFileSelect }: { handleFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void }) => {
+    return (
+        <>
+            <Image
+                src={'/cloud-arrow-up.svg'}
+                width={24}
+                height={24}
+                alt="upload_file"
+            />
+            <span className="text-[#4B4B4B] font-semibold text-[14px]">Drop files here to upload</span>
+            <div className="relative bg-[#E8E8E8] py-2.5 px-3.5 rounded-3xl cursor-pointer">
+                <label className="inline-block text-black font-semibold text-[14px]" htmlFor="fileInput">
+                    Browse Files
+                    <input type="file" accept="*" className="opacity-0 w-full h-full absolute left-0 top-0 cursor-pointer" onChange={handleFileSelect} />
+                </label>
+
+            </div>
+        </>
+    )
+}
 const UploadInProgress = () => {
     return (
         <>
@@ -71,8 +97,30 @@ const UploadInProgress = () => {
         </>
     )
 }
+
+const UploadComplete = ({ fileName, setIsUploadComplete }: { fileName: string, setIsUploadComplete: React.Dispatch<React.SetStateAction<boolean>> }) => {
+    return (
+        <>
+            <Image
+                src={'/circle-check-solid.svg'}
+                width={24}
+                height={24}
+                alt="upload_file"
+            />
+            <span className="text-[#4B4B4B] font-semibold text-[14px]">{fileName}</span>
+            <div>
+                <div className="flex gap-4 cursor-pointer">
+                    <button className="inline-block py-2.5 px-3.5 bg-[#E8E8E8] text-black font-semibold text-[14px] rounded-3xl ">
+                        View Details
+                    </button>
+                    <button className="inline-block py-2.5 px-3.5 bg-[#E8E8E8] text-black font-semibold text-[14px] rounded-3xl " onClick={() => setIsUploadComplete(false)}>
+                        New Upload
+                    </button>
                 </div>
             </div>
-        </div>
+        </>
+    )
+}
+
     )
 }
