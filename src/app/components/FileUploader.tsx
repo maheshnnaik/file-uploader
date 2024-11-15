@@ -4,6 +4,8 @@ import Image from "next/image"
 import { useState } from "react";
 import { Loading } from "./Loading";
 
+let intervalId: unknown | null = null;
+
 export const FileUplolader = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -20,8 +22,22 @@ export const FileUplolader = () => {
             setIsUploadComplete(true)
             setFile(newFile);
             console.log(newFile);
+            const file = event.target.files[0];
+            intervalId = setTimeout(() => {
+                setIsUploading(false)
+                setIsUploadComplete(true)
+                setFile(file);
+            }, 2000) as unknown;
         }
     };
+
+    const cancelUpload = () => {
+        if(intervalId){
+            clearTimeout(intervalId);
+            setIsUploading(false);
+            setIsUploadComplete(false);
+        }
+    }
 
     const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -40,7 +56,7 @@ export const FileUplolader = () => {
 
     const renderContent = () => {
         if (isUploading) {
-            return <UploadInProgress />
+            return <UploadInProgress cancelUpload={cancelUpload} />
         }
         if (isUploadComplete) {
             return <UploadComplete fileName={file?.name || ''} setIsUploadComplete={setIsUploadComplete} />
@@ -88,15 +104,15 @@ const FileUpload = ({ handleFileSelect }: { handleFileSelect: (event: React.Chan
         </>
     )
 }
-const UploadInProgress = () => {
+const UploadInProgress = ({cancelUpload}:{cancelUpload: () => void}) => {
     return (
         <>
             <Loading />
             <span className="text-[#4B4B4B] font-semibold text-[14px]">Uploading File</span>
             <div className="relative bg-[#E8E8E8] py-2.5 px-3.5 rounded-3xl cursor-pointer">
-                <label className="inline-block text-black font-semibold text-[14px]" htmlFor="fileInput">
+                <button className="inline-block text-black font-semibold text-[14px]" onClick={cancelUpload}>
                     Cancel
-                </label>
+                </button>
             </div>
         </>
     )
