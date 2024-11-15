@@ -1,8 +1,10 @@
 'use client';
 
 import Image from "next/image"
+import { useState } from "react";
 
 export const FileUplolader = () => {
+    const [isDragging, setIsDragging] = useState(false);
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             const newFile = event.target.files[0]
@@ -10,9 +12,28 @@ export const FileUplolader = () => {
         }
     };
 
+    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        setIsDragging(true);
+    }
+
+    const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        setIsDragging(false);
+    }
+
+    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        setIsDragging(false)
+    }
     return (
 
-        <div className="flex flex-1 justify-center items-center p-2 border-[2px] border-dashed border-[#E8E8E8] bg-[#F3F3F3] rounded-xl">
+        <div 
+            className={`flex flex-1 justify-center items-center p-2 border-[2px] border-dashed bg-[#F3F3F3] rounded-xl ${isDragging ? 'border-blue-400' : 'border-[#E8E8E8]'}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+        >
             <div className="flex flex-col items-center gap-2">
                 <Image
                     src={'/cloud-arrow-up.svg'}
