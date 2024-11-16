@@ -1,4 +1,16 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+### File Upload Component
+This is a simple, reusable file upload component built using React and Tailwind CSS. The component supports multiple file uploads, file drag-and-drop, and a tooltip that displays file statuses.
+
+## Features
+- **Multiple File Uploads**: Allows users to upload multiple .csv files.
+- **Drag-and-Drop Support**: Users can drag and drop files into the upload area.
+- **File Validation**: Only .csv files are accepted; non-CSV files are rejected.
+- **File Status Display**:
+    - `Pending`: File is uploaded but not yet processed.
+    - `Success`: File has been successfully processed.
+    - `Failed`: File processing has failed.
+    - Hover Tooltip: Displays the status of each file when hovering over its icon.
+    - Dynamic Status Updates: Simulated file processing updates the status dynamically after a delay.
 
 ## Getting Started
 
