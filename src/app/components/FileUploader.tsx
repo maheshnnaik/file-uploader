@@ -79,6 +79,17 @@ export const FileUplolader = () => {
         }
     }
 
+    const renderStatus = () => {
+        const completed = filesUploaded.filter(file => file.status === UploadStatus.SUCCESS).length;
+        const failed = filesUploaded.filter(file => file.status === UploadStatus.FAILED).length;
+        const failedFiles = filesUploaded.filter(file => file.status === UploadStatus.FAILED).map(file => file && file.file?.name);
+        const total = filesUploaded.length;
+        if( completed + failed === total) {
+            return <span className="flex items-center gap-1">Done <Dot /> {completed}/{total} Success <ToolTip title="Failed for:" failedFiles={failedFiles}/></span>
+        } else {
+            return <span className="flex items-center gap-1">Running <Dot /> {completed}/{total} Complete</span>
+        }
+    }
     const renderContent = () => {
         if (isUploading) {
             return <UploadInProgress cancelUpload={cancelUpload} />
@@ -93,7 +104,22 @@ export const FileUplolader = () => {
     }
 
     return (
-
+        <div className="w-[300px] h-[258px] flex flex-col gap-4 p-4 bg-[#f8f8f8] rounded-[12px]">
+            <div className="flex flex-col">
+              <div className="inline-flex items-center gap-2">
+              <Image
+                src="/upload_file.png"
+                width={24}
+                height={24}
+                alt="file_upload"
+              />
+              <h1 className={notoSansJP.className + " text-black font-extrabold text-[20px]"}>razorpay_payin</h1>
+              </div>
+              <span className="text-black text-[12px]">
+                {filesUploaded.length === 0 && 'No file uploaded'}
+                {filesUploaded.length > 0 && renderStatus()}
+              </span>
+            </div>
         <div
             className={`flex flex-1 justify-center items-center p-2 border-[2px] border-dashed bg-[#F3F3F3] rounded-xl ${isDragging ? 'border-blue-400' : 'border-[#E8E8E8]'} ${isUploadComplete && '!border-solid border-[#048848]'} ${isUploadFailed && '!border-solid border-[#DE1135]'} `}
             onDragOver={handleDragOver}
@@ -105,6 +131,7 @@ export const FileUplolader = () => {
                     renderContent()
                 }
             </div>
+        </div>
         </div>
     )
 }
