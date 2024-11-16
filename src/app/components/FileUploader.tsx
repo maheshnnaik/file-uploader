@@ -30,19 +30,26 @@ export const FileUplolader = () => {
         event.preventDefault();
         setIsUploading(true)
         if (event.target.files && event.target.files.length > 0) {
-            const file = event.target.files[0];
-            const newFile = {
-                file: event.target.files[0],
-                status: UploadStatus.PENDING
-            }
-            intervalId = setTimeout(() => {
-                setIsUploading(false)
-                setIsUploadComplete(true)
-                setFile(file);
-                setFilesUploaded([...filesUploaded, newFile]);
-            }, 2000) as unknown;
+            const files = Array.from(event.target.files);
+            processFiles(files);
         }
     };
+
+    const processFiles = (files: File[]) => {
+        const newFile = files.map(file => {
+            return {
+                file: file,
+                status: UploadStatus.PENDING
+            }
+        });
+        intervalId = setTimeout(() => {
+            newFile.forEach(file => file.status = UploadStatus.SUCCESS)
+            setIsUploading(false)
+            setIsUploadComplete(true)
+            setFile(file);
+            setFilesUploaded(prevFiles => [...prevFiles, ...newFile]);
+        }, 2000) as unknown;
+    }
 
     const cancelUpload = () => {
         if(intervalId){
@@ -65,6 +72,11 @@ export const FileUplolader = () => {
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         setIsDragging(false)
+        setIsUploading(true)
+        if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+            const files = Array.from(event.dataTransfer.files);
+            processFiles(files);
+        }
     }
 
     const renderContent = () => {
