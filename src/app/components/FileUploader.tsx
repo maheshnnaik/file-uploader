@@ -149,7 +149,7 @@ const FileUpload = ({ handleFileSelect }: { handleFileSelect: (event: React.Chan
             <div className="relative bg-[#E8E8E8] py-2.5 px-3.5 rounded-3xl cursor-pointer">
                 <label className="inline-block text-black font-semibold text-[14px]" htmlFor="fileInput">
                     Browse Files
-                    <input type="file" accept="*" className="opacity-0 w-full h-full absolute left-0 top-0 cursor-pointer" onChange={handleFileSelect} />
+                    <input type="file" multiple accept="*" className="opacity-0 w-full h-full absolute left-0 top-0 cursor-pointer" onChange={handleFileSelect} />
                 </label>
 
             </div>
