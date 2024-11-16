@@ -16,7 +16,7 @@ interface FileUploladerProps {
     file: File | null;
     status: UploadStatus
 }
-let intervalId: unknown | null = null;
+let intervalId: string | number | NodeJS.Timeout | null | undefined = null;
 
 export const FileUplolader = () => {
     const [isDragging, setIsDragging] = useState(false);
@@ -48,7 +48,7 @@ export const FileUplolader = () => {
             setIsUploadComplete(true)
             setFile(file);
             setFilesUploaded(prevFiles => [...prevFiles, ...newFile]);
-        }, 2000) as unknown;
+        }, 2000);
     }
 
     const cancelUpload = () => {
