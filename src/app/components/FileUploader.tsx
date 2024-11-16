@@ -3,6 +3,8 @@
 import Image from "next/image"
 import { useState } from "react";
 import { Loading } from "./Loading";
+import { notoSansJP, openSans } from "@/app/utils/font";
+import "../globals.css";
 
 enum UploadStatus {
     PENDING = 0,
@@ -172,5 +174,46 @@ const UploadFailed = ({ setIsUploadFailed }: { setIsUploadFailed: React.Dispatch
 
             </div>
         </>
+    )
+}
+
+const Dot = () => {
+    return (
+        <span className={openSans.className + ' font-normal text-[#4B4B4B] text-sm'}>•</span>
+    )
+}
+
+const ToolTip = ({ title, failedFiles }: { title: string, failedFiles: (string | undefined)[] }) => {
+    return (
+        <div data-tooltip-target="tooltip-default relative" className="w-auto text-center">
+            <Image
+                src={'/circle-info.svg'}
+                width={12}
+                height={12}
+                className="tooltip cursor-pointer"
+                alt="info"
+            />
+            
+            <div className="tooltip-text absolute right flex flex-col justify-center items-center">
+                <div className="absolute w-2 h-2 top-0 left-0">
+                    <Image src={'/caret-up-solid.svg'} width={8} height={8} alt={'caret'} />
+                </div>
+                <div className="absolute top-2 -left-2.5 w-[200px] bg-[#282828] rounded-lg p-4 text-white flex flex-col items-start gap-1">
+                    <h4 className={notoSansJP.className + ' text-[16px]'}>{title}</h4>
+                    <div className="flex flex-col gap-2 items-start">
+                    {
+                        failedFiles.map((file, index) => {
+                            return (
+                                <div key={index} className="flex gap-2 items-center">
+                                    <Image src={'/file.svg'} width={16} height={16} alt={'file'}/>
+                                    <span className={notoSansJP.className + ' text-[12px]'}>{file}</span>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+                </div>
+            </div>
+        </div>
     )
 }
